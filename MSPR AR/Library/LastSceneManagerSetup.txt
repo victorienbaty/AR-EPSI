@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/Region_Capture/Scenes/Get_Texture/Get_Texture (Vuforia).unity
+  isLoaded: 1
+  isActive: 1
