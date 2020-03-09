@@ -6,7 +6,7 @@ on:
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-  PROJECT_PATH: "./src"
+  PROJECT_PATH: src
 
 jobs:
   build:
