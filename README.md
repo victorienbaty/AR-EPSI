@@ -10,11 +10,11 @@ First, clone the project :
 
 Now you can open Unity and open the new directory
 
-{{ image open project }}
+![Open project in Unity](ressource/documentation/open_project.png)
 
 When Unity is launched, be sure you have no errors then click on "play" button :
 
-{{ image click play }}
+![Run project in Unity](ressource/documentation/run_unity.png)
 
 That's it ! Now you can contribute or just have fun !
 
