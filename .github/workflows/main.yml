@@ -26,7 +26,6 @@ jobs:
         with:
           path: Library
           key: Library
-          path: ${{ env.PROJECT_PATH }}
 
       # Test
       - name: Run tests
