@@ -6,6 +6,7 @@ on:
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  PROJECT_PATH: "MSPR AR"
 
 jobs:
   build:
@@ -18,25 +19,29 @@ jobs:
         uses: actions/checkout@v2
         with:
           lfs: true
+          path: ${{ env.PROJECT_PATH }}
     
       # Cache
       - uses: actions/cache@v1.1.0
         with:
           path: Library
           key: Library
+          path: ${{ env.PROJECT_PATH }}
 
       # Test
       - name: Run tests
         uses: webbertakken/unity-test-runner@v1.3
         with:
           unityVersion: 2019.2.11f1
+          projectPath: ${{ env.PROJECT_PATH }}
 
       # Build
       - name: Build project
         uses: webbertakken/unity-builder@v0.10
         with:
           unityVersion: 2019.2.11f1
-          targetPlatform: WebGL 
+          targetPlatform: Android 
+          projectPath: ${{ env.PROJECT_PATH }}
 
       # Output 
       - uses: actions/upload-artifact@v1
