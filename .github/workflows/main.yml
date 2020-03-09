@@ -1,4 +1,4 @@
-name: Action
+name: Build action
 
 on:
   pull_request: {}
@@ -10,7 +10,7 @@ env:
 
 jobs:
   build:
-    name: Build my project ?
+    name: Build project
     runs-on: ubuntu-latest
     steps:
     
