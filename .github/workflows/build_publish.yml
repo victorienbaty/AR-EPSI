@@ -18,7 +18,6 @@ jobs:
         unityVersion:
           - 2019.3.0f1
         targetPlatform:
-          - iOS # Build an iOS player.
           - Android # Build an Android .apk standalone app.
 
     steps:
