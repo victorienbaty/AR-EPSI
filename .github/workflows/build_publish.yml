@@ -1,46 +1,52 @@
 name: Build action
 
 on:
-  pull_request: {}
-  push: { branches: [master] }
+  push: { branches: [master, developpment] }
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-  PROJECT_PATH: src
 
 jobs:
   build:
     name: Build project
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        projectPath:
+          - src
+        unityVersion:
+          - 2019.2.11f1
+          - 2019.3.0f1
+        targetPlatform:
+          - iOS # Build an iOS player.
+          - Android # Build an Android .apk standalone app.
+          - WebGL # WebGL.
+
     steps:
-    
       # Checkout
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
           lfs: true
-          path: ${{ env.PROJECT_PATH }}
+          path: ${{ matrix.projectPath }}
     
       # Cache
       - uses: actions/cache@v1.1.0
         with:
-          path: Library
-          key: Library
-
-#       # Test
-#       - name: Run tests
-#         uses: webbertakken/unity-test-runner@v1.3
-#         with:
-#           unityVersion: 2019.2.11f1
-#           projectPath: ${{ env.PROJECT_PATH }}
+          path: ${{ matrix.projectPath }}/Library
+          key: Library-${{ matrix.projectPath }}-${{ matrix.targetPlatform }}
+          restore-keys: |
+            Library-${{ matrix.projectPath }}-
+            Library-
 
       # Build
       - name: Build project
         uses: webbertakken/unity-builder@v0.10
         with:
-          unityVersion: 2019.2.11f1
-          targetPlatform: Android 
-          projectPath: ${{ env.PROJECT_PATH }}
+          projectPath: ${{ matrix.projectPath }}
+          unityVersion: ${{ matrix.unityVersion }}
+          targetPlatform: ${{ matrix.targetPlatform }}
       
       # Create release
       - name: Create Release
@@ -49,8 +55,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref }}_${{ github.sha }}
+          release_name: Release ${{ github.ref }}_${{ github.sha }}
           draft: false
           prerelease: false
           
@@ -63,5 +69,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: ./build/Build.zip
-          asset_name: release_${{ github.ref }}.zip
+          asset_name: release_${{ github.ref }}_${{ github.sha }}.zip
           asset_content_type: application/zip
